@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 
-from . import models
-from .routers import users
+from app.users import models as _user_models
+from app.boards import models as _board_models
+from app.tasks import models as _task_models
+
+from app.users.router import router as users_router
 
 
 app = FastAPI()
 
-app.include_router(users.router)
+app.include_router(users_router)
