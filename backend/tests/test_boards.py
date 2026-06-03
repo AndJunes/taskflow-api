@@ -36,3 +36,46 @@ def test_create_board_with_columns(client):
     assert len(data["columns"]) == 3
     assert data["columns"][0]["name"] == "Todo"
     assert data["columns"][0]["position"] == 0
+
+def test_board_detail_includes_nested_tasks(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "Board", "owner_id": user["id"], "columns": [{"name": "Todo"}],
+    }).json()
+    column_id = board["columns"][0]["id"]
+    client.post("/tasks/", json={
+        "title": "Build login", "column_id": column_id,
+        "subtasks": [{"title": "Design"}],
+    })
+    resp = client.get(f"/boards/{board['id']}")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert len(data["columns"][0]["tasks"]) == 1
+    assert data["columns"][0]["tasks"][0]["title"] == "Build login"
+    assert len(data["columns"][0]["tasks"][0]["subtasks"]) == 1
+
+def test_update_board_syncs_columns(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "B", "owner_id": user["id"],
+        "columns": [{"name": "Todo"}, {"name": "Doing"}],
+    }).json()
+    todo_id = board["columns"][0]["id"]
+    resp = client.put(f"/boards/{board['id']}", json={
+        "name": "B",
+        "columns": [{"id": todo_id, "name": "Backlog"}, {"name": "Done"}],
+    })
+    assert resp.status_code == 200
+    names = [c["name"] for c in resp.json()["columns"]]
+    assert names == ["Backlog", "Done"]
+
+
+def test_update_board_name_only_keeps_columns(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "B", "owner_id": user["id"], "columns": [{"name": "Todo"}],
+    }).json()
+    resp = client.put(f"/boards/{board['id']}", json={"name": "Renamed"})
+    assert resp.status_code == 200
+    assert resp.json()["name"] == "Renamed"
+    assert len(resp.json()["columns"]) == 1

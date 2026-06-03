@@ -22,6 +22,23 @@ def create_board(db: Session, data: schemas.BoardCreate) -> Board:
 
 def update_board(db: Session, board: Board, data: schemas.BoardUpdate) -> Board:
     board.name = data.name
+
+    if data.columns is not None:
+        existing = {c.id: c for c in board.columns}
+        incoming_ids = {c.id for c in data.columns if c.id is not None}
+
+        for col_id, col in existing.items():
+            if col_id not in incoming_ids:
+                db.delete(col)
+
+        for index, col_data in enumerate(data.columns):
+            if col_data.id is not None and col_data.id in existing:
+                col = existing[col_data.id]
+                col.name = col_data.name
+                col.position = index
+            else:
+                board.columns.append(BoardColumn(name=col_data.name, position=index))
+
     db.commit()
     db.refresh(board)
     return board

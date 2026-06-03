@@ -34,7 +34,6 @@ def update_board(board_id: int, data: schemas.BoardUpdate, db: Session = Depends
         raise HTTPException(status_code=404, detail="Board not found")
     return service.update_board(db, board, data)
 
-
 @router.delete("/{board_id}", status_code=204)
 def delete_board(board_id: int, db: Session = Depends(get_db)):
     board = service.get_board(db, board_id)
