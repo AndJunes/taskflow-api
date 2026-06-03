@@ -9,7 +9,7 @@ class Board(Base):
     owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     owner: Mapped["User"] = relationship(back_populates="boards")
     columns: Mapped[list["BoardColumn"]] = relationship(
-        back_populates="board", cascade="all, delete-orphan"
+        back_populates="board", cascade="all, delete-orphan", order_by="BoardColumn.position",
     )
 
 class BoardColumn(Base):
@@ -21,5 +21,5 @@ class BoardColumn(Base):
 
     board: Mapped["Board"] = relationship(back_populates="columns")
     tasks: Mapped[list["Task"]] = relationship(
-        back_populates="column", cascade="all, delete-orphan"
+        back_populates="column", cascade="all, delete-orphan",order_by="Task.position",
     )
