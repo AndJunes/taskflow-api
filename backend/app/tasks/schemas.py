@@ -11,6 +11,11 @@ class SubtaskOut(BaseModel):
     is_completed: bool
     model_config = ConfigDict(from_attributes=True)
 
+class SubtaskUpdate(BaseModel):
+    is_completed: bool
+
+class TaskMove(BaseModel):
+    column_id: int
 
 class TaskCreate(BaseModel):
     title: str
