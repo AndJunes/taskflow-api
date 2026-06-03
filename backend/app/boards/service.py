@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from sqlachemy import Session
+from sqlalchemy.orm import Session
 
 from app.boards.models import Board
 from app.users.models import User
