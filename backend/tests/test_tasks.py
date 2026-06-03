@@ -29,3 +29,33 @@ def test_create_task_unknown_column(client):
 def test_get_task_not_found(client):
     resp = client.get("/tasks/999")
     assert resp.status_code == 404
+
+def test_move_task_between_columns(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "B", "owner_id": user["id"],
+        "columns": [{"name": "Todo"}, {"name": "Doing"}],
+    }).json()
+    todo_id, doing_id = board["columns"][0]["id"], board["columns"][1]["id"]
+    task = client.post("/tasks/", json={"title": "T", "column_id": todo_id}).json()
+
+    resp = client.patch(f"/tasks/{task['id']}", json={"column_id": doing_id})
+    assert resp.status_code == 200
+    assert resp.json()["column_id"] == doing_id
+    assert resp.json()["position"] == 0
+
+
+def test_toggle_subtask(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "B", "owner_id": user["id"], "columns": [{"name": "Todo"}],
+    }).json()
+    col_id = board["columns"][0]["id"]
+    task = client.post("/tasks/", json={
+        "title": "T", "column_id": col_id, "subtasks": [{"title": "S"}],
+    }).json()
+    subtask_id = task["subtasks"][0]["id"]
+
+    resp = client.patch(f"/subtasks/{subtask_id}", json={"is_completed": True})
+    assert resp.status_code == 200
+    assert resp.json()["is_completed"] is True
