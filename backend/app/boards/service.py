@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.boards.models import Board
+from app.boards.models import Board, BoardColumn
 from app.users.models import User
 from app.boards import schemas
 
@@ -12,7 +12,9 @@ def get_board(db: Session, board_id: int) -> Board | None:
     return db.get(Board, board_id)
 
 def create_board(db: Session, data: schemas.BoardCreate) -> Board:
-    board = Board(**data.model_dump())
+    board = Board(name=data.name, owner_id=data.owner_id)
+    for index, col in enumerate(data.columns):
+        board.columns.append(BoardColumn(name=col.name, position=index))
     db.add(board)
     db.commit()
     db.refresh(board)
