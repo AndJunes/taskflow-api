@@ -8,7 +8,7 @@ from app.boards import schemas
 def list_boards(db: Session):
     return db.scalars(select(Board)).all()
 
-def get_boar(db: Session, board_id: int) -> Board | None:
+def get_board(db: Session, board_id: int) -> Board | None:
     return db.get(Board, board_id)
 
 def create_board(db: Session, data: schemas.BoardCreate) -> Board:
