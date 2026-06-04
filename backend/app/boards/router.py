@@ -22,7 +22,7 @@ def get_board(board_id: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=schemas.BoardDetail, status_code=201)
 def create_board(data: schemas.BoardCreate, db: Session = Depends(get_db)):
-    if not service.user_exists(db, data.owner_id):
+    if data.owner_id is not None and not service.user_exists(db, data.owner_id):
         raise HTTPException(status_code=404, detail="Owner not found")
     return service.create_board(db, data)
 

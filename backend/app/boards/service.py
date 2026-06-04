@@ -5,14 +5,26 @@ from app.boards.models import Board, BoardColumn
 from app.users.models import User
 from app.boards import schemas
 
+DEFAULT_USER_EMAIL = "default@taskflow.local"
+
 def list_boards(db: Session):
     return db.scalars(select(Board)).all()
 
 def get_board(db: Session, board_id: int) -> Board | None:
     return db.get(Board, board_id)
 
+def get_or_create_default_user(db: Session) -> User:
+    user = db.scalar(select(User).where(User.email == DEFAULT_USER_EMAIL))
+    if user is None:
+        user = User(name="Default User", email=DEFAULT_USER_EMAIL)
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    return user
+
 def create_board(db: Session, data: schemas.BoardCreate) -> Board:
-    board = Board(name=data.name, owner_id=data.owner_id)
+    owner_id = data.owner_id if data.owner_id is not None else get_or_create_default_user(db).id
+    board = Board(name=data.name, owner_id=owner_id)
     for index, col in enumerate(data.columns):
         board.columns.append(BoardColumn(name=col.name, position=index))
     db.add(board)

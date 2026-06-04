@@ -90,3 +90,13 @@ def test_create_board_rejects_empty_name(client):
     user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
     resp = client.post("/boards/", json={"name": "", "owner_id": user["id"]})
     assert resp.status_code == 422
+
+def test_create_board_without_owner_uses_default(client):
+    resp = client.post("/boards/", json={"name": "B", "columns": []})
+    assert resp.status_code == 201
+    assert resp.json()["owner_id"] is not None      
+
+
+def test_create_board_with_unknown_owner_still_404(client):
+    resp = client.post("/boards/", json={"name": "B", "owner_id": 999})
+    assert resp.status_code == 404                   

@@ -19,7 +19,7 @@ class ColumnUpdate(BaseModel):
 
 class BoardCreate(BaseModel):
     name: str = Field(min_length = 1)
-    owner_id: int #temporal
+    owner_id: int | None = None  
     columns: list[ColumnCreate] = [] 
 
 class BoardUpdate(BaseModel):
