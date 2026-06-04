@@ -119,3 +119,37 @@ def test_update_task_without_subtasks_keeps_them(client):
 
     resp = client.put(f"/tasks/{task['id']}", json={"title": "Renamed"}) 
     assert len(resp.json()["subtasks"]) == 1   
+
+def test_reorder_task_within_column(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "B", "owner_id": user["id"], "columns": [{"name": "Todo"}],
+    }).json()
+    col_id = board["columns"][0]["id"]
+    client.post("/tasks/", json={"title": "A", "column_id": col_id})
+    client.post("/tasks/", json={"title": "B", "column_id": col_id})
+    c = client.post("/tasks/", json={"title": "C", "column_id": col_id}).json()
+
+    client.patch(f"/tasks/{c['id']}", json={"column_id": col_id, "position": 0})
+
+    board = client.get(f"/boards/{board['id']}").json()
+    titles = [t["title"] for t in board["columns"][0]["tasks"]]
+    assert titles == ["C", "A", "B"]
+
+
+def test_move_task_to_position_in_other_column(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "B", "owner_id": user["id"], "columns": [{"name": "Todo"}, {"name": "Doing"}],
+    }).json()
+    todo_id, doing_id = board["columns"][0]["id"], board["columns"][1]["id"]
+    client.post("/tasks/", json={"title": "X", "column_id": doing_id})
+    client.post("/tasks/", json={"title": "Y", "column_id": doing_id})
+    z = client.post("/tasks/", json={"title": "Z", "column_id": todo_id}).json()
+
+    client.patch(f"/tasks/{z['id']}", json={"column_id": doing_id, "position": 1})
+
+    board = client.get(f"/boards/{board['id']}").json()
+    doing = next(c for c in board["columns"] if c["id"] == doing_id)
+    titles = [t["title"] for t in doing["tasks"]]
+    assert titles == ["X", "Z", "Y"]

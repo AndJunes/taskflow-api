@@ -45,7 +45,7 @@ def move_task(task_id: int, data: schemas.TaskMove, db: Session = Depends(get_db
         raise HTTPException(status_code=404, detail="Task not found")
     if not service.column_exists(db, data.column_id):
         raise HTTPException(status_code=404, detail="Column not found")
-    return service.move_task(db, task, data.column_id)
+    return service.move_task(db, task, data.column_id, data.position)
 
 
 @subtasks_router.patch("/{subtask_id}", response_model=schemas.SubtaskOut)

@@ -70,10 +70,7 @@ def set_subtask_completed(db: Session, subtask: Subtask, is_completed: bool) -> 
     db.refresh(subtask)
     return subtask
 
-def move_task(db: Session, task: Task, new_column_id: int) -> Task:
-    if new_column_id == task.column_id:
-        return task 
-
+def move_task(db: Session, task: Task, new_column_id: int, new_position: int | None) -> Task:
     old_column_id = task.column_id
     old_position = task.position
 
@@ -83,12 +80,23 @@ def move_task(db: Session, task: Task, new_column_id: int) -> Task:
         .values(position=Task.position - 1)
         .execution_options(synchronize_session=False)
     )
- 
-    new_count = db.scalar(
-        select(func.count()).select_from(Task).where(Task.column_id == new_column_id)
+
+    count = db.scalar(
+        select(func.count())
+        .select_from(Task)
+        .where(Task.column_id == new_column_id, Task.id != task.id)
     )
+    target = count if new_position is None else max(0, min(new_position, count))
+
+    db.execute(
+        update(Task)
+        .where(Task.column_id == new_column_id, Task.position >= target, Task.id != task.id)
+        .values(position=Task.position + 1)
+        .execution_options(synchronize_session=False)
+    )
+
     task.column_id = new_column_id
-    task.position = new_count
+    task.position = target
 
     db.commit()
     db.refresh(task)

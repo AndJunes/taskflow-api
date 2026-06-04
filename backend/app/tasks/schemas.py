@@ -20,6 +20,7 @@ class SubtaskUpsert(BaseModel):
 
 class TaskMove(BaseModel):
     column_id: int
+    position: int | None = None 
 
 class TaskCreate(BaseModel):
     title: str = Field(min_length=1)
