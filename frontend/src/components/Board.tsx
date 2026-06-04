@@ -29,7 +29,7 @@ export function Board({ board, onTaskClick, onAddColumn }: Props) {
   }
 
   return (
-    <div className="flex h-full gap-6">
+    <div className="flex h-full gap-4 md:gap-6">
       {board.columns.map((column, i) => (
         <Column
           key={column.id}
