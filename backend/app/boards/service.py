@@ -45,7 +45,7 @@ def update_board(db: Session, board: Board, data: schemas.BoardUpdate) -> Board:
 
 def delete_board(db: Session, board: Board) -> None:
     db.delete(board)
-    db.commit
+    db.commit()
 
 def user_exists(db: Session, user_id: int) -> bool:
     return db.get(User, user_id) is not None

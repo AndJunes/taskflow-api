@@ -79,3 +79,9 @@ def test_update_board_name_only_keeps_columns(client):
     assert resp.status_code == 200
     assert resp.json()["name"] == "Renamed"
     assert len(resp.json()["columns"]) == 1
+
+def test_delete_board(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={"name": "B", "owner_id": user["id"]}).json()
+    assert client.delete(f"/boards/{board['id']}").status_code == 204
+    assert client.get(f"/boards/{board['id']}").status_code == 404   
