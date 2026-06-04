@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
-
-interface Board {
-  id: number;
-  name: string;
-  owner_id: number;
-}
+import { api } from "./api/client";
+import type { BoardSummary } from "./types";
 
 function App() {
-  const [boards, setBoards] = useState<Board[]>([]);
+  const [boards, setBoards] = useState<BoardSummary[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/boards/")
-      .then((res) => res.json())
-      .then(setBoards)
-      .catch((err) => setError(String(err)));
+    api.getBoards().then(setBoards).catch((err) => setError(String(err)));
   }, []);
 
   return (
     <div className="p-8 font-sans">
-      <h1 className="text-3xl font-bold text-slate-800">TaskFlow — Boards</h1>
+      <h1 className="text-5xl font-bold text-slate-800">TaskFlow — Boards</h1>
       {error && <p className="text-red-600">Error: {error}</p>}
       <ul className="mt-4 space-y-2">
         {boards.map((board) => (
