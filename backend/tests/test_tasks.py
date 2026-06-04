@@ -59,3 +59,12 @@ def test_toggle_subtask(client):
     resp = client.patch(f"/subtasks/{subtask_id}", json={"is_completed": True})
     assert resp.status_code == 200
     assert resp.json()["is_completed"] is True
+
+def test_create_task_rejects_empty_title(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    board = client.post("/boards/", json={
+        "name": "B", "owner_id": user["id"], "columns": [{"name": "Todo"}],
+    }).json()
+    col_id = board["columns"][0]["id"]
+    resp = client.post("/tasks/", json={"title": "", "column_id": col_id})
+    assert resp.status_code == 422

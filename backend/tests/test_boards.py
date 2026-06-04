@@ -85,3 +85,8 @@ def test_delete_board(client):
     board = client.post("/boards/", json={"name": "B", "owner_id": user["id"]}).json()
     assert client.delete(f"/boards/{board['id']}").status_code == 204
     assert client.get(f"/boards/{board['id']}").status_code == 404   
+
+def test_create_board_rejects_empty_name(client):
+    user = client.post("/users/", json={"name": "Ana", "email": "ana@test.com"}).json()
+    resp = client.post("/boards/", json={"name": "", "owner_id": user["id"]})
+    assert resp.status_code == 422

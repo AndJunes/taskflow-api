@@ -1,8 +1,8 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SubtaskCreate(BaseModel):
-    title: str
+    title: str = Field(min_length=1)
 
 
 class SubtaskOut(BaseModel):
@@ -18,14 +18,14 @@ class TaskMove(BaseModel):
     column_id: int
 
 class TaskCreate(BaseModel):
-    title: str
+    title: str = Field(min_length=1)
     description: str = ""
     column_id: int
     subtasks: list[SubtaskCreate] = []
 
 
 class TaskUpdate(BaseModel):
-    title: str
+    title: str = Field(min_length=1)
     description: str = ""
 
 

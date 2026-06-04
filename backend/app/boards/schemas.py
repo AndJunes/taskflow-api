@@ -1,9 +1,9 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from app.tasks.schemas import TaskOut
 
 
 class ColumnCreate(BaseModel):
-    name: str
+    name: str = Field(min_length=1)
 
 
 class ColumnOut(BaseModel):
@@ -15,15 +15,15 @@ class ColumnOut(BaseModel):
 
 class ColumnUpdate(BaseModel):
     id: int | None = None
-    name: str
+    name: str = Field(min_length=1)
 
 class BoardCreate(BaseModel):
-    name: str
+    name: str = Field(min_length = 1)
     owner_id: int #temporal
     columns: list[ColumnCreate] = [] 
 
 class BoardUpdate(BaseModel):
-    name: str
+    name: str = Field(min_length=1)
     columns: list[ColumnUpdate] | None = None
 
 class BoardOut(BaseModel):
