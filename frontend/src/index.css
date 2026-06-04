@@ -1,1 +1,49 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+
+  --color-primary: #635fc7;
+  --color-primary-hover: #a8a4ff;
+
+  --color-black: #000112;
+  --color-very-dark-grey: #20212c;
+  --color-dark-grey: #2b2c37;
+  --color-lines-dark: #3e3f4e;
+  --color-medium-grey: #828fa3;
+  --color-lines-light: #e4ebfa;
+  --color-light-grey: #f4f7fd;
+  --color-white: #ffffff;
+
+  --color-destructive: #ea5555;
+  --color-destructive-hover: #ff9898;
+
+  --text-heading-xl: 24px;
+  --text-heading-xl--line-height: 30px;
+  --text-heading-xl--font-weight: 700;
+
+  --text-heading-l: 18px;
+  --text-heading-l--line-height: 23px;
+  --text-heading-l--font-weight: 700;
+
+  --text-heading-m: 15px;
+  --text-heading-m--line-height: 19px;
+  --text-heading-m--font-weight: 700;
+
+  --text-heading-s: 12px;
+  --text-heading-s--line-height: 15px;
+  --text-heading-s--font-weight: 700;
+  --text-heading-s--letter-spacing: 2.4px;
+
+  --text-body-l: 13px;
+  --text-body-l--line-height: 23px;
+  --text-body-l--font-weight: 500;
+
+  --text-body-m: 12px;
+  --text-body-m--line-height: 15px;
+  --text-body-m--font-weight: 700;
+}
+
+body {
+  font-family: var(--font-sans);
+}

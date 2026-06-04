@@ -11,12 +11,12 @@ function App() {
   }, []);
 
   return (
-    <div className="p-8 font-sans">
-      <h1 className="text-5xl font-bold text-slate-800">TaskFlow — Boards</h1>
-      {error && <p className="text-red-600">Error: {error}</p>}
+    <div className="min-h-screen bg-light-grey p-8">
+      <h1 className="text-heading-xl text-primary">TaskFlow — Boards</h1>
+      {error && <p className="text-destructive">Error: {error}</p>}
       <ul className="mt-4 space-y-2">
         {boards.map((board) => (
-          <li key={board.id} className="rounded bg-slate-100 px-4 py-2">
+          <li key={board.id} className="rounded bg-white px-4 py-2 text-body-l text-black">
             {board.name}
           </li>
         ))}
