@@ -36,6 +36,22 @@ def create_task(db: Session, data: schemas.TaskCreate) -> Task:
 def update_task(db: Session, task: Task, data: schemas.TaskUpdate) -> Task:
     task.title = data.title
     task.description = data.description
+
+    if data.subtasks is not None:
+        existing = {s.id: s for s in task.subtasks}
+        incoming_ids = {s.id for s in data.subtasks if s.id is not None}
+
+        for sub_id, sub in existing.items():
+            if sub_id not in incoming_ids:
+                db.delete(sub)
+
+
+        for sub_data in data.subtasks:
+            if sub_data.id is not None and sub_data.id in existing:
+                existing[sub_data.id].title = sub_data.title
+            else:
+                task.subtasks.append(Subtask(title=sub_data.title))
+
     db.commit()
     db.refresh(task)
     return task

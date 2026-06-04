@@ -14,6 +14,10 @@ class SubtaskOut(BaseModel):
 class SubtaskUpdate(BaseModel):
     is_completed: bool
 
+class SubtaskUpsert(BaseModel):       
+    id: int | None = None             
+    title: str = Field(min_length=1)
+
 class TaskMove(BaseModel):
     column_id: int
 
@@ -27,6 +31,7 @@ class TaskCreate(BaseModel):
 class TaskUpdate(BaseModel):
     title: str = Field(min_length=1)
     description: str = ""
+    subtasks: list[SubtaskUpsert] | None = None 
 
 
 class TaskOut(BaseModel):
