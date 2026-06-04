@@ -105,6 +105,10 @@ function App() {
     setOpenTaskId(null);
     await refresh();
   }
+  async function handleMoveTask(taskId: number, columnId: number, position: number) {
+    await api.moveTask(taskId, columnId, position);
+    await refresh();
+  }
 
   return (
     <div className="flex h-screen bg-light-grey dark:bg-very-dark-grey">
@@ -134,7 +138,7 @@ function App() {
           onToggleTheme={toggle}
         />
         <main className="flex-1 overflow-auto p-4 md:p-6">
-          <Board board={board} onTaskClick={setOpenTaskId} onAddColumn={() => setBoardModal("edit")} />
+          <Board board={board} onTaskClick={setOpenTaskId} onAddColumn={() => setBoardModal("edit")} onMoveTask={handleMoveTask} />
         </main>
       </div>
       {!sidebarVisible && <ShowSidebarButton onShow={() => setSidebarVisible(true)} />}

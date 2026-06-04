@@ -32,10 +32,10 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify({ is_completed: isCompleted }),
     }),
-  moveTask: (id: number, columnId: number) =>
+  moveTask: (id: number, columnId: number, position?: number) =>
     request<Task>(`/tasks/${id}`, {
       method: "PATCH",
-      body: JSON.stringify({ column_id: columnId }),
+      body: JSON.stringify({ column_id: columnId, position }),
     }),
     createTask: (data: TaskCreateInput) =>
         request<Task>("/tasks/", { method: "POST", body: JSON.stringify(data) }),
