@@ -32,3 +32,18 @@ export interface BoardDetail {
   owner_id: number;
   columns: Column[];
 }
+
+export interface ColumnInput {
+  id?: number;
+  name: string;
+}
+
+export interface BoardCreateInput {
+  name: string;
+  columns: { name: string }[];
+}
+
+export interface BoardUpdateInput {
+  name: string;
+  columns: ColumnInput[];
+}

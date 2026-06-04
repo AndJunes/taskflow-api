@@ -53,3 +53,15 @@ export const EllipsisIcon = ({ className = "" }: { className?: string }) => (
     <circle cx="2.5" cy="17.5" r="2.5" />
   </svg>
 );
+
+export const CheckIcon = ({ className = "" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 12 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M1 5l3.5 3.5L11 1" />
+  </svg>
+);
+
+export const CrossIcon = ({ className = "" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+    <path d="M1 1l13 13M14 1L1 14" />
+  </svg>
+);

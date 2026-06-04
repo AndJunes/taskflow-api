@@ -6,9 +6,10 @@ interface SidebarProps {
   selectedId: number | null;
   onSelect: (id: number) => void;
   onHide: () => void;
+  onCreateBoard: () => void;
 }
 
-export function Sidebar({ boards, selectedId, onSelect, onHide }: SidebarProps) {
+export function Sidebar({ boards, selectedId, onSelect, onHide, onCreateBoard }: SidebarProps) {
   return (
     <aside className="flex w-[300px] flex-col border-r border-lines-light bg-white">
       <div className="px-8 pt-8">
@@ -37,7 +38,7 @@ export function Sidebar({ boards, selectedId, onSelect, onHide }: SidebarProps) 
             </button>
           );
         })}
-        <button className="flex w-full items-center gap-3 rounded-r-full py-3.5 pl-8 text-left text-heading-m text-primary hover:bg-primary/10">
+        <button onClick={onCreateBoard} className="flex w-full items-center gap-3 rounded-r-full py-3.5 pl-8 text-left text-heading-m text-primary hover:bg-primary/10">
           <BoardIcon className="h-4 w-4 shrink-0" />
           + Create New Board
         </button>
