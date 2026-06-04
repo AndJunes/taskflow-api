@@ -47,3 +47,21 @@ export interface BoardUpdateInput {
   name: string;
   columns: ColumnInput[];
 }
+
+export interface SubtaskInput {
+  id?: number;
+  title: string;
+}
+
+export interface TaskCreateInput {
+  title: string;
+  description: string;
+  column_id: number;
+  subtasks: { title: string }[];
+}
+
+export interface TaskUpdateInput {
+  title: string;
+  description: string;
+  subtasks: SubtaskInput[];
+}

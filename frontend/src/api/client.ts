@@ -1,5 +1,5 @@
 import type {
-  BoardSummary, BoardDetail, Subtask, Task, BoardCreateInput, BoardUpdateInput,
+  BoardSummary, BoardDetail, Subtask, Task, BoardCreateInput, BoardUpdateInput, TaskCreateInput, TaskUpdateInput
 } from "../types";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
@@ -37,4 +37,10 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify({ column_id: columnId }),
     }),
+    createTask: (data: TaskCreateInput) =>
+        request<Task>("/tasks/", { method: "POST", body: JSON.stringify(data) }),
+  updateTask: (id: number, data: TaskUpdateInput) =>
+        request<Task>(`/tasks/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteTask: (id: number) =>
+        request<void>(`/tasks/${id}`, { method: "DELETE" }),
 };

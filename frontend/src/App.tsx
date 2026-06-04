@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { api } from "./api/client";
-import type { BoardSummary, BoardDetail, Subtask, ColumnInput } from "./types";
+import type { BoardSummary, BoardDetail, Subtask, ColumnInput, SubtaskInput } from "./types";
 import { Sidebar, ShowSidebarButton } from "./components/Sidebar";
 import { Header } from "./components/Header";
 import { Board } from "./components/Board";
 import { TaskDetailModal } from "./components/TaskDetailModal";
+import { TaskFormModal } from "./components/TaskFormModal";
 import { BoardFormModal } from "./components/BoardFormModal";
 import { DeleteModal } from "./components/DeleteModal";
 
@@ -16,6 +17,8 @@ function App() {
   const [openTaskId, setOpenTaskId] = useState<number | null>(null);
   const [boardModal, setBoardModal] = useState<"create" | "edit" | null>(null);
   const [deletingBoard, setDeletingBoard] = useState(false);
+  const [taskModal, setTaskModal] = useState<"create" | "edit" | null>(null);
+  const [deletingTask, setDeletingTask] = useState(false);
 
   useEffect(() => {
     api.getBoards().then((data) => {
@@ -72,6 +75,35 @@ function App() {
     setSelectedId(list.length > 0 ? list[0].id : null);
   }
 
+  async function handleTaskSubmit(data: {
+    title: string; description: string; columnId: number; subtasks: SubtaskInput[];
+  }) {
+    if (taskModal === "edit" && openTask) {
+      await api.updateTask(openTask.id, {
+        title: data.title, description: data.description, subtasks: data.subtasks,
+      });
+      if (data.columnId !== openTask.column_id) {
+        await api.moveTask(openTask.id, data.columnId);
+      }
+    } else {
+      await api.createTask({
+        title: data.title, description: data.description,
+        column_id: data.columnId, subtasks: data.subtasks.map((s) => ({ title: s.title })),
+      });
+    }
+    setTaskModal(null);
+    setOpenTaskId(null);
+    await refresh();
+  }
+
+  async function handleDeleteTask() {
+    if (!openTask) return;
+    await api.deleteTask(openTask.id);
+    setDeletingTask(false);
+    setOpenTaskId(null);
+    await refresh();
+  }
+
   return (
     <div className="flex h-screen bg-light-grey">
       {sidebarVisible && (
@@ -87,7 +119,7 @@ function App() {
         <Header
           board={selectedSummary}
           sidebarVisible={sidebarVisible}
-          onAddTask={() => {}}
+          onAddTask={() => { if (board && board.columns.length > 0) setTaskModal("create"); }}
           onEditBoard={() => setBoardModal("edit")}
           onDeleteBoard={() => setDeletingBoard(true)}
         />
@@ -97,13 +129,34 @@ function App() {
       </div>
       {!sidebarVisible && <ShowSidebarButton onShow={() => setSidebarVisible(true)} />}
 
-      {openTask && board && (
+      {openTask && board && !taskModal && !deletingTask && (
         <TaskDetailModal
           task={openTask}
           columns={board.columns}
           onToggleSubtask={handleToggleSubtask}
           onChangeStatus={handleChangeStatus}
+          onEdit={() => setTaskModal("edit")}
+          onDelete={() => setDeletingTask(true)}
           onClose={() => setOpenTaskId(null)}
+        />
+      )}
+
+      {taskModal && board && (
+        <TaskFormModal
+          task={taskModal === "edit" ? openTask : null}
+          columns={board.columns}
+          defaultColumnId={board.columns[0]?.id ?? 0}
+          onSubmit={handleTaskSubmit}
+          onClose={() => setTaskModal(null)}
+        />
+      )}
+
+      {deletingTask && openTask && (
+        <DeleteModal
+          title="Delete this task?"
+          message={`Are you sure you want to delete the '${openTask.title}' task and its subtasks? This action cannot be reversed.`}
+          onConfirm={handleDeleteTask}
+          onClose={() => setDeletingTask(false)}
         />
       )}
 
