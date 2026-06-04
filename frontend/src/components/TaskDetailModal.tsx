@@ -23,7 +23,7 @@ export function TaskDetailModal({
   return (
     <Modal onClose={onClose}>
       <div className="flex items-start justify-between gap-4">
-        <h2 className="text-heading-l text-black">{task.title}</h2>
+        <h2 className="text-heading-l text-black dark:text-white">{task.title}</h2>
         <div className="relative">
           <button onClick={() => setMenuOpen((o) => !o)} className="px-2 text-medium-grey" aria-label="Task options">
             <EllipsisIcon className="h-5 w-5" />
@@ -31,7 +31,7 @@ export function TaskDetailModal({
           {menuOpen && (
             <>
               <button className="fixed inset-0 z-0 cursor-default" onClick={() => setMenuOpen(false)} tabIndex={-1} aria-hidden="true" />
-              <div className="absolute right-0 top-10 z-10 w-48 rounded-lg bg-white p-4 shadow-lg">
+              <div className="absolute right-0 top-10 z-10 w-48 rounded-lg bg-white p-4 shadow-lg dark:bg-very-dark-grey">
                 <button onClick={() => { setMenuOpen(false); onEdit(); }} className="block w-full text-left text-body-l text-medium-grey hover:text-primary">
                   Edit Task
                 </button>
@@ -54,16 +54,20 @@ export function TaskDetailModal({
           <li key={subtask.id}>
             <button
               onClick={() => onToggleSubtask(subtask)}
-              className="flex w-full items-center gap-4 rounded bg-light-grey p-3 text-left hover:bg-primary/25"
+              className="flex w-full items-center gap-4 rounded bg-light-grey p-3 text-left hover:bg-primary/25 dark:bg-very-dark-grey"
             >
               <span
                 className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border ${
-                  subtask.is_completed ? "border-primary bg-primary" : "border-medium-grey/25 bg-white"
+                  subtask.is_completed ? "border-primary bg-primary" : "border-medium-grey/25 bg-white dark:bg-dark-grey"
                 }`}
               >
                 {subtask.is_completed && <CheckIcon className="h-2.5 w-2.5 text-white" />}
               </span>
-              <span className={`text-body-m ${subtask.is_completed ? "text-black/50 line-through" : "text-black"}`}>
+              <span
+                className={`text-body-m ${
+                  subtask.is_completed ? "text-black/50 line-through dark:text-white/50" : "text-black dark:text-white"
+                }`}
+              >
                 {subtask.title}
               </span>
             </button>
@@ -75,7 +79,7 @@ export function TaskDetailModal({
       <select
         value={task.column_id}
         onChange={(e) => onChangeStatus(Number(e.target.value))}
-        className="mt-2 w-full rounded border border-medium-grey/25 bg-white px-4 py-2 text-body-l text-black"
+        className="mt-2 w-full rounded border border-medium-grey/25 bg-white px-4 py-2 text-body-l text-black dark:border-lines-dark dark:bg-dark-grey dark:text-white"
       >
         {columns.map((col) => (
           <option key={col.id} value={col.id}>{col.name}</option>

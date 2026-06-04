@@ -14,14 +14,14 @@ export function Header({ board, sidebarVisible, onAddTask, onEditBoard, onDelete
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="flex h-20 items-center border-b border-lines-light bg-white">
+    <header className="flex h-20 items-center border-b border-lines-light bg-white dark:border-lines-dark dark:bg-dark-grey">
       {!sidebarVisible && (
-        <div className="flex h-full items-center border-r border-lines-light px-8">
+        <div className="flex h-full items-center border-r border-lines-light px-8 dark:border-lines-dark">
           <Logo />
         </div>
       )}
       <div className="flex flex-1 items-center justify-between px-6">
-        <h1 className="text-heading-xl text-black">{board?.name ?? "No board selected"}</h1>
+        <h1 className="text-heading-xl text-black dark:text-white">{board?.name ?? "No board selected"}</h1>
         <div className="flex items-center gap-4">
           <button
             onClick={onAddTask}
@@ -37,7 +37,7 @@ export function Header({ board, sidebarVisible, onAddTask, onEditBoard, onDelete
             {menuOpen && (
               <>
                 <button className="fixed inset-0 z-0 cursor-default" onClick={() => setMenuOpen(false)} tabIndex={-1} aria-hidden="true" />
-                <div className="absolute right-0 top-10 z-10 w-48 rounded-lg bg-white p-4 shadow-lg">
+                <div className="absolute right-0 top-10 z-10 w-48 rounded-lg bg-white p-4 shadow-lg dark:bg-very-dark-grey">
                   <button onClick={() => { setMenuOpen(false); onEditBoard(); }} className="block w-full text-left text-body-l text-medium-grey hover:text-primary">
                     Edit Board
                   </button>

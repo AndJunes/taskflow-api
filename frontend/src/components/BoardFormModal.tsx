@@ -13,6 +13,9 @@ type ColumnField = { key: string; id?: number; name: string };
 let counter = 0;
 const newKey = () => `c${counter++}`;
 
+const inputClass =
+  "w-full rounded border border-medium-grey/25 bg-white px-4 py-2 text-body-l text-black placeholder:text-black/25 dark:border-lines-dark dark:bg-dark-grey dark:text-white dark:placeholder:text-white/25";
+
 export function BoardFormModal({ board, onSubmit, onClose }: Props) {
   const isEdit = board !== null;
   const [name, setName] = useState(board?.name ?? "");
@@ -33,15 +36,10 @@ export function BoardFormModal({ board, onSubmit, onClose }: Props) {
 
   return (
     <Modal onClose={onClose}>
-      <h2 className="text-heading-l text-black">{isEdit ? "Edit Board" : "Add New Board"}</h2>
+      <h2 className="text-heading-l text-black dark:text-white">{isEdit ? "Edit Board" : "Add New Board"}</h2>
 
       <label className="mt-6 block text-body-m text-medium-grey">Board Name</label>
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="e.g. Web Design"
-        className="mt-2 w-full rounded border border-medium-grey/25 px-4 py-2 text-body-l text-black placeholder:text-black/25"
-      />
+      <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Web Design" className={`mt-2 ${inputClass}`} />
 
       <label className="mt-6 block text-body-m text-medium-grey">Board Columns</label>
       <div className="mt-2 flex flex-col gap-3">
@@ -49,16 +47,10 @@ export function BoardFormModal({ board, onSubmit, onClose }: Props) {
           <div key={col.key} className="flex items-center gap-4">
             <input
               value={col.name}
-              onChange={(e) =>
-                setColumns((cols) => cols.map((c) => (c.key === col.key ? { ...c, name: e.target.value } : c)))
-              }
-              className="w-full rounded border border-medium-grey/25 px-4 py-2 text-body-l text-black"
+              onChange={(e) => setColumns((cols) => cols.map((c) => (c.key === col.key ? { ...c, name: e.target.value } : c)))}
+              className={inputClass}
             />
-            <button
-              onClick={() => setColumns((cols) => cols.filter((c) => c.key !== col.key))}
-              className="text-medium-grey hover:text-destructive"
-              aria-label="Remove column"
-            >
+            <button onClick={() => setColumns((cols) => cols.filter((c) => c.key !== col.key))} className="text-medium-grey hover:text-destructive" aria-label="Remove column">
               <CrossIcon className="h-4 w-4" />
             </button>
           </div>
@@ -66,7 +58,7 @@ export function BoardFormModal({ board, onSubmit, onClose }: Props) {
       </div>
       <button
         onClick={() => setColumns((cols) => [...cols, { key: newKey(), name: "" }])}
-        className="mt-3 w-full rounded-full bg-primary/10 py-2.5 text-body-m text-primary hover:bg-primary/25"
+        className="mt-3 w-full rounded-full bg-primary/10 py-2.5 text-body-m text-primary hover:bg-primary/25 dark:bg-white dark:hover:bg-white"
       >
         + Add New Column
       </button>

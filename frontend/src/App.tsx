@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "./api/client";
 import type { BoardSummary, BoardDetail, Subtask, ColumnInput, SubtaskInput } from "./types";
+import { useTheme } from "./hooks/useTheme";
 import { Sidebar, ShowSidebarButton } from "./components/Sidebar";
 import { Header } from "./components/Header";
 import { Board } from "./components/Board";
@@ -10,6 +11,7 @@ import { BoardFormModal } from "./components/BoardFormModal";
 import { DeleteModal } from "./components/DeleteModal";
 
 function App() {
+  const { theme, toggle } = useTheme();
   const [boards, setBoards] = useState<BoardSummary[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [board, setBoard] = useState<BoardDetail | null>(null);
@@ -105,7 +107,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-light-grey">
+    <div className="flex h-screen bg-light-grey dark:bg-very-dark-grey">
       {sidebarVisible && (
         <Sidebar
           boards={boards}
@@ -113,6 +115,8 @@ function App() {
           onSelect={setSelectedId}
           onHide={() => setSidebarVisible(false)}
           onCreateBoard={() => setBoardModal("create")}
+          theme={theme}
+          onToggleTheme={toggle}
         />
       )}
       <div className="flex flex-1 flex-col overflow-hidden">
@@ -124,7 +128,7 @@ function App() {
           onDeleteBoard={() => setDeletingBoard(true)}
         />
         <main className="flex-1 overflow-auto p-6">
-          <Board board={board} onTaskClick={setOpenTaskId} />
+          <Board board={board} onTaskClick={setOpenTaskId} onAddColumn={() => setBoardModal("edit")} />
         </main>
       </div>
       {!sidebarVisible && <ShowSidebarButton onShow={() => setSidebarVisible(true)} />}

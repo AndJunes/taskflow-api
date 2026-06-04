@@ -5,7 +5,7 @@ export const Logo = () => (
       <rect x="9" width="6" height="25" rx="2" fill="#635FC7" fillOpacity="0.75" />
       <rect x="18" width="6" height="25" rx="2" fill="#635FC7" fillOpacity="0.5" />
     </svg>
-    <span className="text-[1.75rem] font-bold tracking-tight text-black">kanban</span>
+    <span className="text-[32px] font-bold text-black dark:text-white">kanban</span>
   </div>
 );
 

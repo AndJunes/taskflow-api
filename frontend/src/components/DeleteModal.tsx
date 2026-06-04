@@ -16,7 +16,7 @@ export function DeleteModal({ title, message, onConfirm, onClose }: Props) {
         <button onClick={onConfirm} className="flex-1 rounded-full bg-destructive py-2.5 text-body-m text-white hover:bg-destructive-hover">
           Delete
         </button>
-        <button onClick={onClose} className="flex-1 rounded-full bg-primary/10 py-2.5 text-body-m text-primary hover:bg-primary/25">
+        <button onClick={onClose} className="flex-1 rounded-full bg-primary/10 py-2.5 text-body-m text-primary hover:bg-primary/25 dark:bg-white dark:hover:bg-white">
           Cancel
         </button>
       </div>

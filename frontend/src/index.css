@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+
 @theme {
   --font-sans: "Plus Jakarta Sans", sans-serif;
 
@@ -46,4 +49,11 @@
 
 body {
   font-family: var(--font-sans);
+}
+
+.new-column {
+  background-image: linear-gradient(180deg, rgba(233, 239, 250, 0.5), rgba(233, 239, 250, 0.25));
+}
+.dark .new-column {
+  background-image: linear-gradient(180deg, rgba(43, 44, 55, 0.5), rgba(43, 44, 55, 0.25));
 }
