@@ -1,26 +1,40 @@
 import { useEffect, useState } from "react";
 import { api } from "./api/client";
 import type { BoardSummary } from "./types";
+import { Sidebar, ShowSidebarButton } from "./components/Sidebar";
+import { Header } from "./components/Header";
 
 function App() {
   const [boards, setBoards] = useState<BoardSummary[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
 
   useEffect(() => {
-    api.getBoards().then(setBoards).catch((err) => setError(String(err)));
+    api.getBoards().then((data) => {
+      setBoards(data);
+      if (data.length > 0) setSelectedId(data[0].id);
+    });
   }, []);
 
+  const selectedBoard = boards.find((b) => b.id === selectedId) ?? null;
+
   return (
-    <div className="min-h-screen bg-light-grey p-8">
-      <h1 className="text-heading-xl text-primary">TaskFlow — Boards</h1>
-      {error && <p className="text-destructive">Error: {error}</p>}
-      <ul className="mt-4 space-y-2">
-        {boards.map((board) => (
-          <li key={board.id} className="rounded bg-white px-4 py-2 text-body-l text-black">
-            {board.name}
-          </li>
-        ))}
-      </ul>
+    <div className="flex h-screen bg-light-grey">
+      {sidebarVisible && (
+        <Sidebar
+          boards={boards}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          onHide={() => setSidebarVisible(false)}
+        />
+      )}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Header board={selectedBoard} sidebarVisible={sidebarVisible} />
+        <main className="flex-1 overflow-auto p-6">
+          {/* F3: acá van las columnas y las tarjetas */}
+        </main>
+      </div>
+      {!sidebarVisible && <ShowSidebarButton onShow={() => setSidebarVisible(true)} />}
     </div>
   );
 }
