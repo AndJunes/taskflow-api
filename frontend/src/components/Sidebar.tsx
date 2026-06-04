@@ -15,7 +15,7 @@ export function Sidebar({
   boards, selectedId, onSelect, onHide, onCreateBoard, theme, onToggleTheme,
 }: SidebarProps) {
   return (
-    <aside className="flex w-[300px] flex-col border-r border-lines-light bg-white dark:border-lines-dark dark:bg-dark-grey">
+    <aside className="hidden w-[300px] flex-col border-r border-lines-light bg-white md:flex dark:border-lines-dark dark:bg-dark-grey">
       <div className="px-8 pt-8">
         <Logo />
       </div>
@@ -83,7 +83,7 @@ export function ShowSidebarButton({ onShow }: { onShow: () => void }) {
   return (
     <button
       onClick={onShow}
-      className="fixed bottom-8 left-0 flex h-12 w-14 items-center justify-center rounded-r-full bg-primary text-white hover:bg-primary-hover"
+      className="fixed bottom-8 left-0 hidden h-12 w-14 items-center justify-center rounded-r-full bg-primary text-white hover:bg-primary-hover md:flex"
       aria-label="Show sidebar"
     >
       <EyeSlashIcon className="h-4 w-5" />

@@ -122,10 +122,16 @@ function App() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header
           board={selectedSummary}
+          boards={boards}
+          selectedId={selectedId}
           sidebarVisible={sidebarVisible}
+          onSelectBoard={setSelectedId}
+          onCreateBoard={() => setBoardModal("create")}
           onAddTask={() => { if (board && board.columns.length > 0) setTaskModal("create"); }}
           onEditBoard={() => setBoardModal("edit")}
           onDeleteBoard={() => setDeletingBoard(true)}
+          theme={theme}
+          onToggleTheme={toggle}
         />
         <main className="flex-1 overflow-auto p-6">
           <Board board={board} onTaskClick={setOpenTaskId} onAddColumn={() => setBoardModal("edit")} />

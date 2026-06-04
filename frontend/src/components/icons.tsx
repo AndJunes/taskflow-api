@@ -65,3 +65,29 @@ export const CrossIcon = ({ className = "" }: { className?: string }) => (
     <path d="M1 1l13 13M14 1L1 14" />
   </svg>
 );
+
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg">
+      <rect width="6" height="25" rx="2" fill="#635FC7" />
+      <rect opacity="0.75" x="9" width="6" height="25" rx="2" fill="#635FC7" />
+      <rect opacity="0.5" x="18" width="6" height="25" rx="2" fill="#635FC7" />
+    </svg>
+  );
+}
+
+export function ChevronIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+export function PlusIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.368 12V7.344H12V4.632H7.368V0H4.656v4.632H0v2.712h4.656V12z" />
+    </svg>
+  );
+}
