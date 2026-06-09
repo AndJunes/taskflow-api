@@ -1,0 +1,40 @@
+# Desarrollo: hot reload en backend y frontend mediante bind mounts.
+#
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# Frontend en http://localhost:5173 — Backend en http://localhost:8000
+
+# Nombre de proyecto propio: aísla imágenes/contenedores/red del stack de
+# producción, para que `--build` en dev no pise las imágenes de prod.
+name: taskflow-api-dev
+
+services:
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    environment:
+      CORS_ORIGINS: http://localhost:5173
+      # Polling para que uvicorn --reload detecte cambios en Docker/macOS
+      WATCHFILES_FORCE_POLLING: "true"
+    volumes:
+      - ./backend:/app
+      - /app/.venv          # volumen anónimo: preserva el .venv de la imagen
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    environment:
+      VITE_API_URL: http://localhost:8000
+      # Activa el polling de Vite definido en vite.config.ts
+      VITE_USE_POLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules   # volumen anónimo: preserva node_modules de la imagen
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

@@ -1,0 +1,37 @@
+# Producción: imágenes optimizadas. Frontend estático servido por nginx,
+# backend con uvicorn. SQLite persistida en un volumen.
+#
+#   docker compose up --build
+#
+# Variables sobreescribibles vía .env (ver .env.example).
+
+services:
+  backend:
+    build:
+      context: ./backend
+      target: prod
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////data/app.db}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+    volumes:
+      - backend_data:/data
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      target: prod
+      args:
+        # Se incrusta en build time: debe ser la URL del backend
+        # alcanzable desde el navegador del usuario.
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend_data:

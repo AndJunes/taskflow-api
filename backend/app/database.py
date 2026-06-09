@@ -1,10 +1,18 @@
+import os
 from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{BASE_DIR / 'app.db'}"
+DEFAULT_SQLITE_URL = f"sqlite:///{BASE_DIR / 'app.db'}"
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_SQLITE_URL)
+
+connect_args = (
+    {"check_same_thread": False}
+    if SQLALCHEMY_DATABASE_URL.startswith("sqlite")
+    else {}
+)
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

@@ -17,3 +17,4 @@ wheels/
 *.db
 .venv/
 node_modules/
+backend.zip
